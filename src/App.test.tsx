@@ -40,7 +40,7 @@ describe('App Component', () => {
 
       render(<App />);
 
-      expect(screen.getByText('Loading Pokémon...')).toBeInTheDocument();
+      expect(screen.getByText('Loading Pokemon...')).toBeInTheDocument();
     });
 
     it('hides loading spinner after API call completes', async () => {
@@ -48,7 +48,7 @@ describe('App Component', () => {
 
       await screen.findAllByText('bulbasaur');
 
-      expect(screen.queryByText('Loading Pokémon...')).not.toBeInTheDocument();
+      expect(screen.queryByText('Loading Pokemon...')).not.toBeInTheDocument();
     });
   });
 
@@ -71,7 +71,7 @@ describe('App Component', () => {
       render(<App />);
 
       expect(
-        await screen.findByText('No Pokémon found with that name.')
+        await screen.findByText('No Pokemon found with that name.')
       ).toBeInTheDocument();
     });
 
@@ -92,17 +92,20 @@ describe('App Component', () => {
     it('calls API with correct search term when user searches', async () => {
       let capturedUrl: string | undefined;
       server.use(
-        http.get(/https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/, ({ request }) => {
-          capturedUrl = request.url;
-          return HttpResponse.json(mockPokemonDetail);
-        })
+        http.get(
+          /https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/,
+          ({ request }) => {
+            capturedUrl = request.url;
+            return HttpResponse.json(mockPokemonDetail);
+          }
+        )
       );
 
       const user = userEvent.setup();
       render(<App />);
 
       await user.type(
-        screen.getByPlaceholderText('Search Pokémon by name…'),
+        screen.getByPlaceholderText('Search Pokemon by name…'),
         'mewtwo'
       );
       await user.click(screen.getByRole('button', { name: 'Search' }));
@@ -126,9 +129,9 @@ describe('App Component', () => {
 
       await screen.findByText('bulbasaur');
 
-      await user.clear(screen.getByPlaceholderText('Search Pokémon by name…'));
+      await user.clear(screen.getByPlaceholderText('Search Pokemon by name…'));
       await user.type(
-        screen.getByPlaceholderText('Search Pokémon by name…'),
+        screen.getByPlaceholderText('Search Pokemon by name…'),
         'bulbasaur'
       );
       await user.click(screen.getByRole('button', { name: 'Search' }));
@@ -157,12 +160,12 @@ describe('App Component', () => {
       );
 
       await user.type(
-        screen.getByPlaceholderText('Search Pokémon by name…'),
+        screen.getByPlaceholderText('Search Pokemon by name…'),
         'unknown'
       );
       await user.click(screen.getByRole('button', { name: 'Search' }));
 
-      await screen.findByText('No Pokémon found with that name.');
+      await screen.findByText('No Pokemon found with that name.');
       expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument();
     });
 
@@ -171,7 +174,7 @@ describe('App Component', () => {
       render(<App />);
 
       await user.type(
-        screen.getByPlaceholderText('Search Pokémon by name…'),
+        screen.getByPlaceholderText('Search Pokemon by name…'),
         'eevee'
       );
       await user.click(screen.getByRole('button', { name: 'Search' }));

@@ -15,7 +15,7 @@ describe('Search Component', () => {
       render(<Search onSearch={mockOnSearch} />);
 
       expect(
-        screen.getByPlaceholderText('Search Pokémon by name…')
+        screen.getByPlaceholderText('Search Pokemon by name…')
       ).toBeInTheDocument();
       expect(
         screen.getByRole('button', { name: 'Search' })
@@ -27,7 +27,7 @@ describe('Search Component', () => {
       render(<Search onSearch={mockOnSearch} />);
 
       expect(
-        screen.getByPlaceholderText('Search Pokémon by name…')
+        screen.getByPlaceholderText('Search Pokemon by name…')
       ).toHaveValue('pikachu');
     });
 
@@ -35,7 +35,7 @@ describe('Search Component', () => {
       render(<Search onSearch={mockOnSearch} />);
 
       expect(
-        screen.getByPlaceholderText('Search Pokémon by name…')
+        screen.getByPlaceholderText('Search Pokemon by name…')
       ).toHaveValue('');
     });
   });
@@ -46,12 +46,12 @@ describe('Search Component', () => {
       render(<Search onSearch={mockOnSearch} />);
 
       await user.type(
-        screen.getByPlaceholderText('Search Pokémon by name…'),
+        screen.getByPlaceholderText('Search Pokemon by name…'),
         'bulbasaur'
       );
 
       expect(
-        screen.getByPlaceholderText('Search Pokémon by name…')
+        screen.getByPlaceholderText('Search Pokemon by name…')
       ).toHaveValue('bulbasaur');
     });
 
@@ -60,7 +60,7 @@ describe('Search Component', () => {
       render(<Search onSearch={mockOnSearch} />);
 
       await user.type(
-        screen.getByPlaceholderText('Search Pokémon by name…'),
+        screen.getByPlaceholderText('Search Pokemon by name…'),
         'eevee'
       );
       await user.click(screen.getByRole('button', { name: 'Search' }));
@@ -73,7 +73,7 @@ describe('Search Component', () => {
       render(<Search onSearch={mockOnSearch} />);
 
       await user.type(
-        screen.getByPlaceholderText('Search Pokémon by name…'),
+        screen.getByPlaceholderText('Search Pokemon by name…'),
         'mewtwo{Enter}'
       );
 
@@ -87,7 +87,7 @@ describe('Search Component', () => {
       render(<Search onSearch={mockOnSearch} />);
 
       expect(
-        screen.getByPlaceholderText('Search Pokémon by name…')
+        screen.getByPlaceholderText('Search Pokemon by name…')
       ).toHaveValue('mewtwo');
     });
   });

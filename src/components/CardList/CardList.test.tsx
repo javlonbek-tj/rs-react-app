@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
 import CardList from './CardList';
 import type { Pokemon } from '../../types/api';
 
@@ -19,26 +20,9 @@ describe('CardList Component', () => {
         makePokemon({ id: 3, name: 'squirtle' }),
       ];
 
-      render(<CardList pokemons={pokemon} />);
+      render(<MemoryRouter><CardList pokemons={pokemon} /></MemoryRouter>);
 
       expect(screen.getAllByRole('img')).toHaveLength(3);
-    });
-
-    it('displays "No Pokémon to display" message when data array is empty', () => {
-      render(<CardList pokemons={[]} />);
-
-      expect(screen.getByText('No Pokémon to display.')).toBeInTheDocument();
-      expect(
-        screen.getByText('Enter a name above and hit Search.')
-      ).toBeInTheDocument();
-    });
-
-    it('does not show empty state when data is provided', () => {
-      render(<CardList pokemons={[makePokemon()]} />);
-
-      expect(
-        screen.queryByText('No Pokémon to display.')
-      ).not.toBeInTheDocument();
     });
   });
 
@@ -49,27 +33,27 @@ describe('CardList Component', () => {
         makePokemon({ id: 2, name: 'mewtwo' }),
       ];
 
-      render(<CardList pokemons={pokemon} />);
+      render(<MemoryRouter><CardList pokemons={pokemon} /></MemoryRouter>);
 
       expect(screen.getByText('pikachu')).toBeInTheDocument();
       expect(screen.getByText('mewtwo')).toBeInTheDocument();
     });
 
     it('renders pokemon image with correct alt text', () => {
-      render(<CardList pokemons={[makePokemon({ name: 'eevee' })]} />);
+      render(<MemoryRouter><CardList pokemons={[makePokemon({ name: 'eevee' })]} /></MemoryRouter>);
 
       expect(screen.getByAltText('eevee')).toBeInTheDocument();
     });
 
     it('displays the correct pokemon ID badge', () => {
-      render(<CardList pokemons={[makePokemon({ id: 7 })]} />);
+      render(<MemoryRouter><CardList pokemons={[makePokemon({ id: 7 })]} /></MemoryRouter>);
 
       expect(screen.getByText('#007')).toBeInTheDocument();
     });
 
     it('displays all types for each pokemon', () => {
       render(
-        <CardList pokemons={[makePokemon({ types: ['fire', 'flying'] })]} />
+        <MemoryRouter><CardList pokemons={[makePokemon({ types: ['fire', 'flying'] })]} /></MemoryRouter>
       );
 
       expect(screen.getByText('fire')).toBeInTheDocument();

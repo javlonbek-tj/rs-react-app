@@ -32,7 +32,7 @@ function Search({ onSearch }: SearchProps) {
         value={inputValue}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        placeholder="Search Pokémon by name…"
+        placeholder="Search Pokemon by name…"
         className="flex-1 px-4 py-3 rounded-xl bg-white text-slate-900 placeholder-slate-400 border-0 shadow-inner focus:outline-none focus:ring-2 focus:ring-white/60 text-base"
       />
       <button

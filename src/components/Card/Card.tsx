@@ -1,3 +1,4 @@
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 import type { Pokemon } from '../../types/api';
 
 interface CardProps {
@@ -26,9 +27,23 @@ const typeColors: Record<string, string> = {
 };
 
 function Card({ pokemon }: CardProps) {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { id: selectedId } = useParams();
+  const isSelected = selectedId === String(pokemon.id);
+
+  function handleClick(e: React.MouseEvent) {
+    e.stopPropagation();
+    navigate(`/details/${pokemon.id}?${searchParams.toString()}`);
+  }
+
   return (
-    <div className="flex flex-col bg-white rounded-2xl border border-slate-200 hover:border-red-400 hover:shadow-lg transition-all overflow-hidden">
-      <div className="bg-slate-50 flex items-center justify-center pt-6 pb-4 relative">
+    <div
+      onClick={handleClick}
+      className={`flex flex-col bg-white rounded-2xl border transition-all overflow-hidden cursor-pointer
+        ${isSelected ? 'border-red-500 shadow-lg shadow-red-100 scale-[1.02]' : 'border-slate-200 hover:border-red-400 hover:shadow-lg'}`}
+    >
+      <div className="bg-slate-50 flex items-center justify-center pt-4 pb-2 relative">
         <span className="absolute top-3 right-3 text-xs text-slate-300 font-mono font-semibold">
           #{String(pokemon.id).padStart(3, '0')}
         </span>
