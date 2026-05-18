@@ -19,13 +19,13 @@ describe('CardList Component', () => {
         makePokemon({ id: 3, name: 'squirtle' }),
       ];
 
-      render(<CardList pokemon={pokemon} />);
+      render(<CardList pokemons={pokemon} />);
 
       expect(screen.getAllByRole('img')).toHaveLength(3);
     });
 
     it('displays "No Pokémon to display" message when data array is empty', () => {
-      render(<CardList pokemon={[]} />);
+      render(<CardList pokemons={[]} />);
 
       expect(screen.getByText('No Pokémon to display.')).toBeInTheDocument();
       expect(
@@ -34,7 +34,7 @@ describe('CardList Component', () => {
     });
 
     it('does not show empty state when data is provided', () => {
-      render(<CardList pokemon={[makePokemon()]} />);
+      render(<CardList pokemons={[makePokemon()]} />);
 
       expect(
         screen.queryByText('No Pokémon to display.')
@@ -49,29 +49,27 @@ describe('CardList Component', () => {
         makePokemon({ id: 2, name: 'mewtwo' }),
       ];
 
-      render(<CardList pokemon={pokemon} />);
+      render(<CardList pokemons={pokemon} />);
 
       expect(screen.getByText('pikachu')).toBeInTheDocument();
       expect(screen.getByText('mewtwo')).toBeInTheDocument();
     });
 
     it('renders pokemon image with correct alt text', () => {
-      render(<CardList pokemon={[makePokemon({ name: 'eevee' })]} />);
+      render(<CardList pokemons={[makePokemon({ name: 'eevee' })]} />);
 
       expect(screen.getByAltText('eevee')).toBeInTheDocument();
     });
 
     it('displays the correct pokemon ID badge', () => {
-      render(<CardList pokemon={[makePokemon({ id: 7 })]} />);
+      render(<CardList pokemons={[makePokemon({ id: 7 })]} />);
 
       expect(screen.getByText('#007')).toBeInTheDocument();
     });
 
     it('displays all types for each pokemon', () => {
       render(
-        <CardList
-          pokemon={[makePokemon({ types: ['fire', 'flying'] })]}
-        />
+        <CardList pokemons={[makePokemon({ types: ['fire', 'flying'] })]} />
       );
 
       expect(screen.getByText('fire')).toBeInTheDocument();

@@ -1,33 +1,24 @@
-import { Component } from 'react';
+import { useState } from 'react';
 
-interface ErrorTriggerState {
-  shouldThrow: boolean;
-}
+function ErrorTrigger() {
+  const [shouldThrow, setShouldThrow] = useState(false);
 
-class ErrorTrigger extends Component<object, ErrorTriggerState> {
-  constructor(props: object) {
-    super(props);
-    this.state = { shouldThrow: false };
+  function handleClick() {
+    setShouldThrow(true);
   }
 
-  handleClick = () => {
-    this.setState({ shouldThrow: true });
-  };
-
-  render() {
-    if (this.state.shouldThrow) {
-      throw new Error('Test error triggered by user.');
-    }
-
-    return (
-      <button
-        onClick={this.handleClick}
-        className="px-4 py-2 border border-red-300 cursor-pointer text-red-500 rounded-lg hover:bg-red-500  hover:text-gray-50 transition-colors text-sm font-bold"
-      >
-        Trigger Error
-      </button>
-    );
+  if (shouldThrow) {
+    throw new Error('Test error triggered by user.');
   }
+
+  return (
+    <button
+      onClick={handleClick}
+      className="px-4 py-2 border border-red-300 cursor-pointer text-red-500 rounded-lg hover:bg-red-500  hover:text-gray-50 transition-colors text-sm font-bold"
+    >
+      Trigger Error
+    </button>
+  );
 }
 
 export default ErrorTrigger;
