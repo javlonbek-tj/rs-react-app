@@ -13,7 +13,11 @@ function Pagination({ total, limit }: PaginationProps) {
   if (totalPages <= 1) return null;
 
   function goTo(nextPage: number) {
-    setSearchParams({ page: String(nextPage) });
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set('page', String(nextPage));
+      return next;
+    });
   }
 
   return (

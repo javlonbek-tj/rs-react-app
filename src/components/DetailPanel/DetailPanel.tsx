@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { useParams, useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { fetchPokemonById } from '../../api/pokeapi';
 import Spinner from '../Spinner/Spinner';
 import type { PokemonDetail } from '../../types/api';
@@ -23,14 +23,16 @@ function reducer(_state: State, action: Action): State {
   }
 }
 
-function DetailPanel() {
-  const { id } = useParams();
+interface DetailPanelProps {
+  id: string;
+}
+
+function DetailPanel({ id }: DetailPanelProps) {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [state, dispatch] = useReducer(reducer, { status: 'loading' });
 
   useEffect(() => {
-    if (!id) return;
     dispatch({ type: 'FETCH_START' });
     fetchPokemonById(id)
       .then((pokemon) => dispatch({ type: 'FETCH_SUCCESS', pokemon }))
@@ -42,7 +44,9 @@ function DetailPanel() {
 
   function close(e: React.MouseEvent) {
     e.stopPropagation();
-    navigate({ pathname: '/', search: searchParams.toString() });
+    const next = new URLSearchParams(searchParams);
+    next.delete('details');
+    navigate({ pathname: '/', search: next.toString() });
   }
 
   return (

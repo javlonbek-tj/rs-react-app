@@ -1,4 +1,4 @@
-import { Link, useParams, useSearchParams } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import type { Pokemon } from '../../types/api';
 import { typeColors } from '../../utils/typeColors';
 
@@ -8,12 +8,14 @@ interface CardProps {
 
 function Card({ pokemon }: CardProps) {
   const [searchParams] = useSearchParams();
-  const { id: selectedId } = useParams();
-  const isSelected = selectedId === String(pokemon.id);
+  const isSelected = searchParams.get('details') === String(pokemon.id);
+
+  const newParams = new URLSearchParams(searchParams);
+  newParams.set('details', String(pokemon.id));
 
   return (
     <Link
-      to={`/details/${pokemon.id}?${searchParams.toString()}`}
+      to={`/?${newParams.toString()}`}
       onClick={(e) => e.stopPropagation()}
       className={`flex flex-col bg-white rounded-2xl border transition-all overflow-hidden
         ${isSelected ? 'border-red-500 shadow-lg shadow-red-100 scale-[1.02]' : 'border-slate-200 hover:border-red-400 hover:shadow-lg'}`}

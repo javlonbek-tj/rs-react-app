@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryRouter, RouterProvider } from 'react-router';
+import { createMemoryRouter, Outlet, RouterProvider, useSearchParams } from 'react-router';
 import { http, HttpResponse } from 'msw';
 import { server } from '../../mocks/server';
 import DetailPanel from './DetailPanel';
@@ -17,13 +17,27 @@ const mockDetail = {
   weight: 69,
 };
 
+function MockHomePage() {
+  const [searchParams] = useSearchParams();
+  const detailId = searchParams.get('details');
+  return (
+    <div>
+      <p>Home</p>
+      {detailId && <Outlet />}
+    </div>
+  );
+}
+
 function renderDetailPanel(id = '1') {
   const router = createMemoryRouter(
     [
-      { path: '/', element: <div>Home</div> },
-      { path: '/details/:id', element: <DetailPanel /> },
+      {
+        path: '/',
+        element: <MockHomePage />,
+        children: [{ index: true, element: <DetailPanel id={id} /> }],
+      },
     ],
-    { initialEntries: [`/details/${id}`] }
+    { initialEntries: [`/?page=1&details=${id}`] }
   );
   render(<RouterProvider router={router} />);
 }
@@ -102,12 +116,12 @@ describe('DetailPanel Component', () => {
       ).toBeInTheDocument();
     });
 
-    it('navigates to the home page when the close button is clicked', async () => {
+    it('hides the details panel when the close button is clicked', async () => {
       const user = userEvent.setup();
       renderDetailPanel();
       await screen.findByText('bulbasaur');
       await user.click(screen.getByRole('button', { name: 'Close details' }));
-      expect(screen.getByText('Home')).toBeInTheDocument();
+      expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument();
     });
   });
 });

@@ -1,5 +1,5 @@
 import { useEffect, useReducer } from 'react';
-import { Outlet, useOutlet, useNavigate, useSearchParams } from 'react-router';
+import { Outlet, useNavigate, useSearchParams } from 'react-router';
 import SearchBar from '../components/SearchBar/SearchBar';
 import CardList from '../components/CardList/CardList';
 import Spinner from '../components/Spinner/Spinner';
@@ -49,10 +49,10 @@ const initialState: State = {
 };
 
 function HomePage() {
-  const outlet = useOutlet();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page') ?? '1');
+  const detailId = searchParams.get('details');
   const [searchTerm, setSearchTerm] = useLocalStorage(STORAGE_KEY, '');
   const [state, dispatch] = useReducer(reducer, initialState);
   const { pokemon, total, loading, error } = state;
@@ -84,7 +84,9 @@ function HomePage() {
   }
 
   function closeDetails() {
-    navigate({ pathname: '/', search: searchParams.toString() });
+    const next = new URLSearchParams(searchParams);
+    next.delete('details');
+    navigate({ pathname: '/', search: next.toString() });
   }
 
   return (
@@ -93,8 +95,8 @@ function HomePage() {
 
       <div className="relative flex flex-1 overflow-hidden">
         <main
-          className={`flex-1 overflow-y-auto p-6 ${outlet ? 'cursor-pointer' : ''}`}
-          onClick={outlet ? closeDetails : undefined}
+          className={`flex-1 overflow-y-auto p-6 ${detailId ? 'cursor-pointer' : ''}`}
+          onClick={detailId ? closeDetails : undefined}
         >
           {loading && <Spinner />}
           {!loading && error && <ErrorState message={error} />}
@@ -109,7 +111,7 @@ function HomePage() {
           )}
         </main>
 
-        {outlet && (
+        {detailId && (
           <aside className="absolute right-0 top-0 bottom-0 w-96 border-l-2 border-slate-200 bg-white overflow-y-auto shadow-xl z-10">
             <Outlet />
           </aside>
