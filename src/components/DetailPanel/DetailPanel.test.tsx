@@ -34,7 +34,7 @@ function renderDetailPanel(id = '1') {
       {
         path: '/',
         element: <MockHomePage />,
-        children: [{ index: true, element: <DetailPanel id={id} /> }],
+        children: [{ index: true, element: <DetailPanel /> }],
       },
     ],
     { initialEntries: [`/?page=1&details=${id}`] }

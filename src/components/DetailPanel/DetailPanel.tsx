@@ -23,13 +23,10 @@ function reducer(_state: State, action: Action): State {
   }
 }
 
-interface DetailPanelProps {
-  id: string;
-}
-
-function DetailPanel({ id }: DetailPanelProps) {
+function DetailPanel() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const id = searchParams.get('details') ?? '';
   const [state, dispatch] = useReducer(reducer, { status: 'loading' });
 
   useEffect(() => {
