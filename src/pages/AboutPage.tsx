@@ -22,12 +22,14 @@ function AboutPage() {
         <p className="text-slate-500 text-sm mb-6">Software Developer</p>
 
         <p className="text-slate-600 leading-relaxed mb-6">
-          Currently working in a non-IT field, but actively dedicating free time
-          to programming and software development. Has experience with modern
-          technologies and has successfully developed and delivered several
-          production-ready projects. The long-term goal is to transition into
-          the IT industry and continue growing as a professional software
-          developer.
+          I am currently working in a non-IT field, but in my free time I
+          actively dedicate myself to programming and software development. I
+          have experience working with modern technologies such as React,
+          TypeScript, Next.js, Node.js, Express.js, PostgreSQL, and MongoDB.
+          Additionally, I have successfully developed and delivered several
+          production-ready projects for my current workplace. My long-term goal
+          is to transition into the IT industry and continue growing as a
+          professional software developer.
         </p>
 
         <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wide mb-3">

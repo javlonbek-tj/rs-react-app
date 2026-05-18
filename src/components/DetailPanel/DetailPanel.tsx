@@ -3,27 +3,7 @@ import { useParams, useNavigate, useSearchParams } from 'react-router';
 import { fetchPokemonById } from '../../api/pokeapi';
 import Spinner from '../Spinner/Spinner';
 import type { PokemonDetail } from '../../types/api';
-
-const typeColors: Record<string, string> = {
-  normal: 'bg-slate-100 text-slate-600',
-  fire: 'bg-orange-100 text-orange-700',
-  water: 'bg-blue-100 text-blue-700',
-  electric: 'bg-yellow-100 text-yellow-700',
-  grass: 'bg-green-100 text-green-700',
-  ice: 'bg-cyan-100 text-cyan-700',
-  fighting: 'bg-red-100 text-red-700',
-  poison: 'bg-violet-100 text-violet-700',
-  ground: 'bg-amber-100 text-amber-700',
-  flying: 'bg-sky-100 text-sky-700',
-  psychic: 'bg-pink-100 text-pink-700',
-  bug: 'bg-lime-100 text-lime-700',
-  rock: 'bg-stone-100 text-stone-600',
-  ghost: 'bg-indigo-100 text-indigo-700',
-  dragon: 'bg-purple-100 text-purple-700',
-  dark: 'bg-slate-700 text-slate-100',
-  steel: 'bg-slate-200 text-slate-600',
-  fairy: 'bg-pink-100 text-pink-500',
-};
+import { typeColors } from '../../utils/typeColors';
 
 type State =
   | { status: 'loading' }
@@ -44,7 +24,7 @@ function reducer(_state: State, action: Action): State {
 }
 
 function DetailPanel() {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [state, dispatch] = useReducer(reducer, { status: 'loading' });

@@ -53,16 +53,15 @@ function HomePage() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const page = Number(searchParams.get('page') ?? '1');
+  const [searchTerm, setSearchTerm] = useLocalStorage(STORAGE_KEY, '');
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { pokemon, total, loading, error } = state;
 
   useEffect(() => {
     if (!searchParams.get('page')) {
       setSearchParams({ page: '1' }, { replace: true });
     }
   }, [searchParams, setSearchParams]);
-
-  const [searchTerm, setSearchTerm] = useLocalStorage(STORAGE_KEY, '');
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const { pokemon, total, loading, error } = state;
 
   useEffect(() => {
     dispatch({ type: 'FETCH_START' });
