@@ -1,34 +1,26 @@
+import { Link, useSearchParams } from 'react-router';
 import type { Pokemon } from '../../types/api';
+import { typeColors } from '../../utils/typeColors';
 
 interface CardProps {
   pokemon: Pokemon;
 }
 
-const typeColors: Record<string, string> = {
-  normal: 'bg-slate-100 text-slate-600',
-  fire: 'bg-orange-100 text-orange-700',
-  water: 'bg-blue-100 text-blue-700',
-  electric: 'bg-yellow-100 text-yellow-700',
-  grass: 'bg-green-100 text-green-700',
-  ice: 'bg-cyan-100 text-cyan-700',
-  fighting: 'bg-red-100 text-red-700',
-  poison: 'bg-violet-100 text-violet-700',
-  ground: 'bg-amber-100 text-amber-700',
-  flying: 'bg-sky-100 text-sky-700',
-  psychic: 'bg-pink-100 text-pink-700',
-  bug: 'bg-lime-100 text-lime-700',
-  rock: 'bg-stone-100 text-stone-600',
-  ghost: 'bg-indigo-100 text-indigo-700',
-  dragon: 'bg-purple-100 text-purple-700',
-  dark: 'bg-slate-700 text-slate-100',
-  steel: 'bg-slate-200 text-slate-600',
-  fairy: 'bg-pink-100 text-pink-500',
-};
-
 function Card({ pokemon }: CardProps) {
+  const [searchParams] = useSearchParams();
+  const isSelected = searchParams.get('details') === String(pokemon.id);
+
+  const newParams = new URLSearchParams(searchParams);
+  newParams.set('details', String(pokemon.id));
+
   return (
-    <div className="flex flex-col bg-white rounded-2xl border border-slate-200 hover:border-red-400 hover:shadow-lg transition-all overflow-hidden">
-      <div className="bg-slate-50 flex items-center justify-center pt-6 pb-4 relative">
+    <Link
+      to={`/?${newParams.toString()}`}
+      onClick={(e) => e.stopPropagation()}
+      className={`flex flex-col bg-white rounded-2xl border transition-all overflow-hidden
+        ${isSelected ? 'border-red-500 shadow-lg shadow-red-100 scale-[1.02]' : 'border-slate-200 hover:border-red-400 hover:shadow-lg'}`}
+    >
+      <div className="bg-slate-50 flex items-center justify-center pt-4 pb-2 relative">
         <span className="absolute top-3 right-3 text-xs text-slate-300 font-mono font-semibold">
           #{String(pokemon.id).padStart(3, '0')}
         </span>
@@ -53,7 +45,7 @@ function Card({ pokemon }: CardProps) {
           ))}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 

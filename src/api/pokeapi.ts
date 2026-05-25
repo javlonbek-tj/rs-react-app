@@ -1,6 +1,11 @@
-import type { Pokemon } from '../types/api';
+import type { Pokemon, PokemonDetail } from '../types/api';
 
 const BASE_URL = 'https://pokeapi.co/api/v2';
+
+export interface FetchPokemonResult {
+  pokemon: Pokemon[];
+  total: number;
+}
 
 interface PokeListItem {
   name: string;
@@ -8,6 +13,7 @@ interface PokeListItem {
 }
 
 interface PokeListResponse {
+  count: number;
   results: PokeListItem[];
 }
 
@@ -16,6 +22,8 @@ interface PokeDetailResponse {
   name: string;
   sprites: { front_default: string };
   types: Array<{ slot: number; type: { name: string } }>;
+  height: number;
+  weight: number;
 }
 
 function parseDetail(data: PokeDetailResponse): Pokemon {
@@ -27,6 +35,14 @@ function parseDetail(data: PokeDetailResponse): Pokemon {
   };
 }
 
+function parseDetailFull(data: PokeDetailResponse): PokemonDetail {
+  return {
+    ...parseDetail(data),
+    height: data.height,
+    weight: data.weight,
+  };
+}
+
 async function fetchDetail(url: string): Promise<Pokemon> {
   const res = await fetch(url);
   if (!res.ok) {
@@ -35,25 +51,41 @@ async function fetchDetail(url: string): Promise<Pokemon> {
   return parseDetail((await res.json()) as PokeDetailResponse);
 }
 
-export async function fetchPokemon(name: string): Promise<Pokemon[]> {
+export async function fetchPokemon(
+  name: string,
+  page: number = 1,
+  limit: number = 20
+): Promise<FetchPokemonResult> {
   if (name.trim()) {
     const res = await fetch(`${BASE_URL}/pokemon/${name.trim().toLowerCase()}`);
+    if (res.status === 404) throw new Error('No Pokemon found with that name.');
     if (!res.ok) {
-      if (res.status === 404) {
-        throw new Error('No Pokémon found with that name.');
-      }
       throw new Error(
         `Something went wrong (${res.status}). Please try again.`
       );
     }
     const data = (await res.json()) as PokeDetailResponse;
-    return [parseDetail(data)];
+    return { pokemon: [parseDetail(data)], total: 1 };
   }
 
-  const res = await fetch(`${BASE_URL}/pokemon?limit=20&offset=0`);
+  const offset = (page - 1) * limit;
+  const res = await fetch(
+    `${BASE_URL}/pokemon?limit=${limit}&offset=${offset}`
+  );
   if (!res.ok) {
     throw new Error(`Something went wrong (${res.status}). Please try again.`);
   }
   const list = (await res.json()) as PokeListResponse;
-  return Promise.all(list.results.map((p) => fetchDetail(p.url)));
+  const pokemon = await Promise.all(
+    list.results.map((p) => fetchDetail(p.url))
+  );
+  return { pokemon, total: list.count };
+}
+
+export async function fetchPokemonById(id: string): Promise<PokemonDetail> {
+  const res = await fetch(`${BASE_URL}/pokemon/${id}`);
+  if (!res.ok) {
+    throw new Error(`Something went wrong (${res.status}). Please try again.`);
+  }
+  return parseDetailFull((await res.json()) as PokeDetailResponse);
 }

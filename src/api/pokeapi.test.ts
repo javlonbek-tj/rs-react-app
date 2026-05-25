@@ -4,43 +4,45 @@ import { server } from '../mocks/server';
 import { mockPokemonDetail, mockPokemonList } from '../mocks/handlers';
 
 describe('fetchPokemon', () => {
-  describe('Single Pokémon fetch (name provided)', () => {
+  describe('Single Pokemon fetch (name provided)', () => {
     it('calls the correct URL when a name is provided', async () => {
       let capturedUrl: string | undefined;
       server.use(
-        http.get(/https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/, ({ request }) => {
-          capturedUrl = request.url;
-          return HttpResponse.json(mockPokemonDetail);
-        })
+        http.get(
+          /https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/,
+          ({ request }) => {
+            capturedUrl = request.url;
+            return HttpResponse.json(mockPokemonDetail);
+          }
+        )
       );
 
       await fetchPokemon('bulbasaur');
 
-      expect(capturedUrl).toBe(
-        'https://pokeapi.co/api/v2/pokemon/bulbasaur'
-      );
+      expect(capturedUrl).toBe('https://pokeapi.co/api/v2/pokemon/bulbasaur');
     });
 
     it('lowercases and trims the name before fetching', async () => {
       let capturedUrl: string | undefined;
       server.use(
-        http.get(/https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/, ({ request }) => {
-          capturedUrl = request.url;
-          return HttpResponse.json(mockPokemonDetail);
-        })
+        http.get(
+          /https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/,
+          ({ request }) => {
+            capturedUrl = request.url;
+            return HttpResponse.json(mockPokemonDetail);
+          }
+        )
       );
 
       await fetchPokemon('  BULBASAUR  ');
 
-      expect(capturedUrl).toBe(
-        'https://pokeapi.co/api/v2/pokemon/bulbasaur'
-      );
+      expect(capturedUrl).toBe('https://pokeapi.co/api/v2/pokemon/bulbasaur');
     });
 
     it('returns a parsed pokemon array on success', async () => {
       const result = await fetchPokemon('bulbasaur');
 
-      expect(result).toEqual([
+      expect(result.pokemon).toEqual([
         {
           id: 1,
           name: 'bulbasaur',
@@ -50,7 +52,7 @@ describe('fetchPokemon', () => {
       ]);
     });
 
-    it('throws a specific error on 404 response', async () => {
+    it('throws a friendly error on 404', async () => {
       server.use(
         http.get(/https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/, () => {
           return new HttpResponse(null, { status: 404 });
@@ -58,7 +60,7 @@ describe('fetchPokemon', () => {
       );
 
       await expect(fetchPokemon('unknownmon')).rejects.toThrow(
-        'No Pokémon found with that name.'
+        'No Pokemon found with that name.'
       );
     });
 
@@ -95,10 +97,13 @@ describe('fetchPokemon', () => {
     it('fetches detail for each pokemon URL returned in the list', async () => {
       const capturedUrls: string[] = [];
       server.use(
-        http.get(/https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/, ({ request }) => {
-          capturedUrls.push(request.url);
-          return HttpResponse.json(mockPokemonDetail);
-        })
+        http.get(
+          /https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/,
+          ({ request }) => {
+            capturedUrls.push(request.url);
+            return HttpResponse.json(mockPokemonDetail);
+          }
+        )
       );
 
       await fetchPokemon('');
@@ -110,8 +115,8 @@ describe('fetchPokemon', () => {
     it('returns a parsed array for all pokemon in the list', async () => {
       const result = await fetchPokemon('');
 
-      expect(result).toHaveLength(2);
-      expect(result[0]).toMatchObject({ name: 'bulbasaur' });
+      expect(result.pokemon).toHaveLength(2);
+      expect(result.pokemon[0]).toMatchObject({ name: 'bulbasaur' });
     });
 
     it('throws an error when the list fetch fails', async () => {
@@ -142,7 +147,7 @@ describe('fetchPokemon', () => {
 
       const result = await fetchPokemon('pikachu');
 
-      expect(result[0]).toEqual({
+      expect(result.pokemon[0]).toEqual({
         id: 25,
         name: 'pikachu',
         image: 'https://example.com/pikachu.png',

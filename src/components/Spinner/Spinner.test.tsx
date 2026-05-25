@@ -6,7 +6,7 @@ describe('Spinner Component', () => {
     it('renders the loading text', () => {
       render(<Spinner />);
 
-      expect(screen.getByText('Loading Pokémon...')).toBeInTheDocument();
+      expect(screen.getByText('Loading Pokemon...')).toBeInTheDocument();
     });
 
     it('renders the spinner element', () => {
