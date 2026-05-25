@@ -9,6 +9,7 @@ import ErrorTrigger from '../components/ErrorTrigger/ErrorTrigger';
 import { fetchPokemon } from '../api/pokeapi';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import type { Pokemon } from '../types/api';
+import Flyout from '../components/Flyout/Flyout';
 
 const STORAGE_KEY = 'searchTerm';
 const LIMIT = 9;
@@ -95,32 +96,33 @@ function HomePage() {
 
       <div className="relative flex flex-1 overflow-hidden">
         <main
-          className={`flex-1 overflow-y-auto p-6 ${detailId ? 'cursor-pointer' : ''}`}
+          className={`flex-1 overflow-y-auto py-4  ${detailId ? 'cursor-pointer' : ''}`}
           onClick={detailId ? closeDetails : undefined}
         >
           {loading && <Spinner />}
           {!loading && error && <ErrorState message={error} />}
           {!loading && !error && pokemon.length > 0 && (
-            <div className="max-w-5xl mx-auto">
-              <p className="text-slate-500 text-md mb-5 font-bold">
+            <div className="max-w-5xl mx-auto px-6 lg:px-4">
+              <p className="text-slate-500 text-md mb-5 font-bold dark:text-slate-300">
                 {total} result{total !== 1 ? 's' : ''} found
               </p>
               <CardList pokemons={pokemon} />
-              <Pagination total={total} limit={LIMIT} />
+              <div className="flex items-center justify-between pt-6">
+                <Pagination total={total} limit={LIMIT} />
+                <ErrorTrigger />
+              </div>
             </div>
           )}
         </main>
 
         {detailId && (
-          <aside className="absolute right-0 top-0 bottom-0 w-96 border-l-2 border-slate-200 bg-white overflow-y-auto shadow-xl z-10">
+          <aside className="absolute right-0 top-0 bottom-0 w-96 border-l-2 border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 overflow-y-auto shadow-xl z-10">
             <Outlet />
           </aside>
         )}
       </div>
 
-      <div className="px-6 pb-4 flex justify-end max-w-5xl mx-auto w-full">
-        <ErrorTrigger />
-      </div>
+      <Flyout pokemon={pokemon} />
     </div>
   );
 }

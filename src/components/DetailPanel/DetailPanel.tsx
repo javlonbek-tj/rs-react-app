@@ -17,9 +17,12 @@ type Action =
 
 function reducer(_state: State, action: Action): State {
   switch (action.type) {
-    case 'FETCH_START':  return { status: 'loading' };
-    case 'FETCH_SUCCESS': return { status: 'success', pokemon: action.pokemon };
-    case 'FETCH_ERROR':  return { status: 'error', message: action.message };
+    case 'FETCH_START':
+      return { status: 'loading' };
+    case 'FETCH_SUCCESS':
+      return { status: 'success', pokemon: action.pokemon };
+    case 'FETCH_ERROR':
+      return { status: 'error', message: action.message };
   }
 }
 
@@ -34,7 +37,8 @@ function DetailPanel() {
     fetchPokemonById(id)
       .then((pokemon) => dispatch({ type: 'FETCH_SUCCESS', pokemon }))
       .catch((err: unknown) => {
-        const message = err instanceof Error ? err.message : 'Something went wrong.';
+        const message =
+          err instanceof Error ? err.message : 'Something went wrong.';
         dispatch({ type: 'FETCH_ERROR', message });
       });
   }, [id]);
@@ -48,11 +52,13 @@ function DetailPanel() {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 sticky top-0 bg-white z-10">
-        <h2 className="text-lg font-bold text-slate-700">Details</h2>
+      <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700 sticky top-0 bg-white dark:bg-slate-800 z-10">
+        <h2 className="text-lg font-bold text-slate-700 dark:text-slate-200">
+          Details
+        </h2>
         <button
           onClick={close}
-          className="text-slate-400 hover:text-slate-700 text-2xl leading-none cursor-pointer transition-colors"
+          className="text-slate-400 dark:text-slate-500 hover:text-slate-700  dark:hover:text-slate-200 text-2xl leading-none cursor-pointer transition-colors"
           aria-label="Close details"
         >
           ✕
@@ -71,7 +77,7 @@ function DetailPanel() {
 
         {state.status === 'success' && (
           <div className="flex flex-col items-center gap-6">
-            <div className="bg-slate-50 rounded-2xl w-full flex items-center justify-center py-10 relative">
+            <div className="bg-slate-50 dark:bg-slate-600 rounded-2xl w-full flex items-center justify-center py-10 relative">
               <span className="absolute top-4 right-4 text-sm text-slate-300 font-mono font-semibold">
                 #{String(state.pokemon.id).padStart(3, '0')}
               </span>
@@ -99,12 +105,20 @@ function DetailPanel() {
 
             <div className="grid grid-cols-2 gap-4 w-full">
               <div className="bg-slate-50 rounded-xl p-4 text-center">
-                <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-1">Height</p>
-                <p className="text-slate-800 text-xl font-bold">{(state.pokemon.height / 10).toFixed(1)} m</p>
+                <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-1">
+                  Height
+                </p>
+                <p className="text-slate-800 text-xl font-bold">
+                  {(state.pokemon.height / 10).toFixed(1)} m
+                </p>
               </div>
               <div className="bg-slate-50 rounded-xl p-4 text-center">
-                <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-1">Weight</p>
-                <p className="text-slate-800 text-xl font-bold">{(state.pokemon.weight / 10).toFixed(1)} kg</p>
+                <p className="text-slate-400 text-xs font-semibold uppercase tracking-wide mb-1">
+                  Weight
+                </p>
+                <p className="text-slate-800 text-xl font-bold">
+                  {(state.pokemon.weight / 10).toFixed(1)} kg
+                </p>
               </div>
             </div>
           </div>

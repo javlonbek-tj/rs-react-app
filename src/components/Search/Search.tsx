@@ -33,11 +33,11 @@ function Search({ onSearch }: SearchProps) {
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder="Search Pokemon by name…"
-        className="flex-1 px-4 py-3 rounded-xl bg-white text-slate-900 placeholder-slate-400 border-0 shadow-inner focus:outline-none focus:ring-2 focus:ring-white/60 text-base"
+        className="flex-1 px-4 py-3 rounded-xl bg-slate-200 text-slate-900 placeholder-slate-400 border-0 shadow-inner focus:outline-none focus:ring-slate-200 text-base"
       />
       <button
         onClick={handleSearch}
-        className="px-6 py-3 bg-red-900 text-white rounded-xl cursor-pointer hover:bg-red-950 transition-colors font-bold text-base shadow"
+        className="px-6 py-3 bg-red-600 text-white rounded-xl cursor-pointer hover:bg-red-700 transition-colors dark:hover:bg-red-700 font-bold text-base shadow"
       >
         Search
       </button>

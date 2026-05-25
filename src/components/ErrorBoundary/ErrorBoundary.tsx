@@ -29,7 +29,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-slate-50">
+        <div className="min-h-screen flex flex-col items-center justify-center p-8 bg-slate-50 dark:bg-slate-900">
           <div className="text-6xl mb-6">💥</div>
           <h2 className="text-2xl font-bold text-slate-800 mb-2">
             Something went wrong

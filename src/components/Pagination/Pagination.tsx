@@ -20,24 +20,27 @@ function Pagination({ total, limit }: PaginationProps) {
     });
   }
 
+  const className =
+    'px-5 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-200 font-semibold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer';
+
   return (
-    <div className="flex items-center justify-center gap-4 mt-6">
+    <div className="flex items-center gap-4">
       <button
         onClick={() => goTo(page - 1)}
         disabled={page <= 1}
-        className="px-5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold shadow-sm hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+        className={className}
       >
         ← Previous
       </button>
 
-      <span className="text-slate-500 text-sm font-medium">
+      <span className="text-slate-500 dark:text-slate-200 text-sm font-medium">
         Page {page} of {totalPages}
       </span>
 
       <button
         onClick={() => goTo(page + 1)}
         disabled={page >= totalPages}
-        className="px-5 py-2 rounded-xl bg-white border border-slate-200 text-slate-700 font-semibold shadow-sm hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+        className={className}
       >
         Next →
       </button>

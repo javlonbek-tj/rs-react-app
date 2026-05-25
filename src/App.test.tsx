@@ -1,9 +1,24 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { http, HttpResponse, delay } from 'msw';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import App from './App';
 import { server } from './mocks/server';
 import { mockPokemonDetail, mockPokemonList } from './mocks/handlers';
+import selectedPokemonReducer from './app/selectedPokemonSlice';
+
+function makeStore() {
+  return configureStore({ reducer: { selectedPokemon: selectedPokemonReducer } });
+}
+
+function renderApp() {
+  render(
+    <Provider store={makeStore()}>
+      <App />
+    </Provider>
+  );
+}
 
 describe('App Component', () => {
   beforeEach(() => {
@@ -17,7 +32,7 @@ describe('App Component', () => {
 
   describe('Integration', () => {
     it('makes an initial API call and renders results on mount', async () => {
-      render(<App />);
+      renderApp();
 
       const cards = await screen.findAllByText('bulbasaur');
       expect(cards.length).toBeGreaterThan(0);
@@ -25,7 +40,7 @@ describe('App Component', () => {
 
     it('calls API with saved search term from localStorage on initial load', async () => {
       localStorage.setItem('searchTerm', 'bulbasaur');
-      render(<App />);
+      renderApp();
 
       expect(await screen.findByText('bulbasaur')).toBeInTheDocument();
     });
@@ -38,13 +53,13 @@ describe('App Component', () => {
         })
       );
 
-      render(<App />);
+      renderApp();
 
       expect(screen.getByText('Loading Pokemon...')).toBeInTheDocument();
     });
 
     it('hides loading spinner after API call completes', async () => {
-      render(<App />);
+      renderApp();
 
       await screen.findAllByText('bulbasaur');
 
@@ -54,7 +69,7 @@ describe('App Component', () => {
 
   describe('API Integration', () => {
     it('renders pokemon cards on successful API response', async () => {
-      render(<App />);
+      renderApp();
 
       const cards = await screen.findAllByText('bulbasaur');
       expect(cards).toHaveLength(2);
@@ -68,7 +83,7 @@ describe('App Component', () => {
       );
 
       localStorage.setItem('searchTerm', 'unknownmon');
-      render(<App />);
+      renderApp();
 
       expect(
         await screen.findByText('No Pokemon found with that name.')
@@ -82,7 +97,7 @@ describe('App Component', () => {
         })
       );
 
-      render(<App />);
+      renderApp();
 
       expect(
         await screen.findByText('Something went wrong (500). Please try again.')
@@ -102,7 +117,7 @@ describe('App Component', () => {
       );
 
       const user = userEvent.setup();
-      render(<App />);
+      renderApp();
 
       await user.type(
         screen.getByPlaceholderText('Search Pokemon by name…'),
@@ -125,7 +140,7 @@ describe('App Component', () => {
 
       const user = userEvent.setup();
       localStorage.setItem('searchTerm', 'bulbasaur');
-      render(<App />);
+      renderApp();
 
       await screen.findByText('bulbasaur');
 
@@ -142,14 +157,14 @@ describe('App Component', () => {
 
   describe('State Management', () => {
     it('shows result count after successful API response', async () => {
-      render(<App />);
+      renderApp();
 
       expect(await screen.findByText(/results found/)).toBeInTheDocument();
     });
 
     it('clears previous results and shows error when API fails on new search', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      renderApp();
 
       await screen.findAllByText('bulbasaur');
 
@@ -171,7 +186,7 @@ describe('App Component', () => {
 
     it('saves search term to localStorage when user searches', async () => {
       const user = userEvent.setup();
-      render(<App />);
+      renderApp();
 
       await user.type(
         screen.getByPlaceholderText('Search Pokemon by name…'),
