@@ -33,8 +33,8 @@ function renderFlyout(selectedIds: number[] = []) {
 
 describe('Flyout Component', () => {
   beforeEach(() => {
-    global.URL.createObjectURL = vi.fn(() => 'blob:mock');
-    global.URL.revokeObjectURL = vi.fn();
+    URL.createObjectURL = vi.fn(() => 'blob:mock');
+    URL.revokeObjectURL = vi.fn();
   });
 
   afterEach(() => {
