@@ -11,17 +11,19 @@ const stack = [
 function AboutPage() {
   return (
     <main className="max-w-3xl mx-auto px-6 py-12">
-      <h1 className="text-3xl font-black text-slate-800 mb-8">
+      <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-8">
         About the author
       </h1>
 
-      <div className="bg-white rounded-2xl border border-slate-200 px-8 py-8 mb-8">
-        <h2 className="text-xl font-bold text-slate-800 mb-1">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 px-8 py-8 mb-8">
+        <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100 mb-1">
           Javlonbek Turdimatov
         </h2>
-        <p className="text-slate-500 text-sm mb-6">Software Developer</p>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mb-6">
+          Software Developer
+        </p>
 
-        <p className="text-slate-600 leading-relaxed mb-6">
+        <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-6">
           I am currently working in a non-IT field, but in my free time I
           actively dedicate myself to programming and software development. I
           have experience working with modern technologies such as React,
@@ -47,17 +49,17 @@ function AboutPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 px-8 py-6">
-        <h2 className="text-lg font-bold text-slate-800 mb-2">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 px-8 py-6">
+        <h2 className="text-lg font-bold text-slate-800 dark:text-slate-100 mb-2">
           About this project
         </h2>
-        <p className="text-slate-600 leading-relaxed">
+        <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
           A Pokemon application built as part of the{' '}
           <a
             href="https://rs.school/courses/reactjs"
             target="_blank"
             rel="noreferrer"
-            className="text-red-600 hover:underline font-medium"
+            className="text-red-600 dark:text-red-400 hover:underline font-medium"
           >
             RS School React course
           </a>
