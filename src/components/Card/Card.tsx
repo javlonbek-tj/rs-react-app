@@ -37,7 +37,7 @@ function Card({ pokemon }: CardProps) {
         />
       </div>
       <div className="px-4 py-4 flex flex-col items-center gap-2 relative">
-        <p className="font-bold text-slate-900 text-base capitalize">
+        <p className="font-bold text-slate-900 dark:text-slate-50 text-base capitalize">
           {pokemon.name}
         </p>
         <div className="flex gap-1.5 flex-wrap justify-center">

@@ -7,6 +7,7 @@ import App from './App';
 import { server } from './mocks/server';
 import { mockPokemonDetail, mockPokemonList } from './mocks/handlers';
 import selectedPokemonReducer from './app/selectedPokemonSlice';
+import ThemeProvider from './context/ThemeProvider';
 
 function makeStore() {
   return configureStore({ reducer: { selectedPokemon: selectedPokemonReducer } });
@@ -15,7 +16,9 @@ function makeStore() {
 function renderApp() {
   render(
     <Provider store={makeStore()}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </Provider>
   );
 }
