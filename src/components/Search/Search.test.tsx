@@ -6,13 +6,12 @@ describe('Search Component', () => {
   const mockOnSearch = vi.fn();
 
   beforeEach(() => {
-    localStorage.clear();
     mockOnSearch.mockClear();
   });
 
   describe('Rendering', () => {
     it('renders search input and search button', () => {
-      render(<Search onSearch={mockOnSearch} />);
+      render(<Search initialValue="" onSearch={mockOnSearch} />);
 
       expect(
         screen.getByPlaceholderText('Search Pokemon by name…')
@@ -22,17 +21,16 @@ describe('Search Component', () => {
       ).toBeInTheDocument();
     });
 
-    it('displays previously saved search term from localStorage on mount', () => {
-      localStorage.setItem('searchTerm', 'pikachu');
-      render(<Search onSearch={mockOnSearch} />);
+    it('displays the initialValue prop on mount', () => {
+      render(<Search initialValue="pikachu" onSearch={mockOnSearch} />);
 
       expect(
         screen.getByPlaceholderText('Search Pokemon by name…')
       ).toHaveValue('pikachu');
     });
 
-    it('shows empty input when no saved term exists', () => {
-      render(<Search onSearch={mockOnSearch} />);
+    it('shows empty input when initialValue is empty', () => {
+      render(<Search initialValue="" onSearch={mockOnSearch} />);
 
       expect(
         screen.getByPlaceholderText('Search Pokemon by name…')
@@ -43,7 +41,7 @@ describe('Search Component', () => {
   describe('User Interaction', () => {
     it('updates input value when user types', async () => {
       const user = userEvent.setup();
-      render(<Search onSearch={mockOnSearch} />);
+      render(<Search initialValue="" onSearch={mockOnSearch} />);
 
       await user.type(
         screen.getByPlaceholderText('Search Pokemon by name…'),
@@ -57,7 +55,7 @@ describe('Search Component', () => {
 
     it('triggers search callback with correct term when button is clicked', async () => {
       const user = userEvent.setup();
-      render(<Search onSearch={mockOnSearch} />);
+      render(<Search initialValue="" onSearch={mockOnSearch} />);
 
       await user.type(
         screen.getByPlaceholderText('Search Pokemon by name…'),
@@ -70,7 +68,7 @@ describe('Search Component', () => {
 
     it('triggers search callback when Enter key is pressed', async () => {
       const user = userEvent.setup();
-      render(<Search onSearch={mockOnSearch} />);
+      render(<Search initialValue="" onSearch={mockOnSearch} />);
 
       await user.type(
         screen.getByPlaceholderText('Search Pokemon by name…'),
@@ -78,17 +76,6 @@ describe('Search Component', () => {
       );
 
       expect(mockOnSearch).toHaveBeenCalledWith('mewtwo');
-    });
-  });
-
-  describe('localStorage Integration', () => {
-    it('retrieves saved search term on component mount', () => {
-      localStorage.setItem('searchTerm', 'mewtwo');
-      render(<Search onSearch={mockOnSearch} />);
-
-      expect(
-        screen.getByPlaceholderText('Search Pokemon by name…')
-      ).toHaveValue('mewtwo');
     });
   });
 });

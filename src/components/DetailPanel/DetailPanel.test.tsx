@@ -1,8 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { createMemoryRouter, Outlet, RouterProvider, useSearchParams } from 'react-router';
+import { Provider } from 'react-redux';
 import { http, HttpResponse } from 'msw';
 import { server } from '../../mocks/server';
+import { makeStore } from '../../__tests__/test-utils';
 import DetailPanel from './DetailPanel';
 
 const mockDetail = {
@@ -39,7 +41,11 @@ function renderDetailPanel(id = '1') {
     ],
     { initialEntries: [`/?page=1&details=${id}`] }
   );
-  render(<RouterProvider router={router} />);
+  render(
+    <Provider store={makeStore()}>
+      <RouterProvider router={router} />
+    </Provider>
+  );
 }
 
 describe('DetailPanel Component', () => {
@@ -122,6 +128,36 @@ describe('DetailPanel Component', () => {
       await screen.findByText('bulbasaur');
       await user.click(screen.getByRole('button', { name: 'Close details' }));
       expect(screen.queryByText('bulbasaur')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Refresh button', () => {
+    it('renders the refresh button', async () => {
+      renderDetailPanel();
+      await screen.findByText('bulbasaur');
+      expect(
+        screen.getByRole('button', { name: 'Refresh details' })
+      ).toBeInTheDocument();
+    });
+
+    it('refetches data when refresh button is clicked', async () => {
+      let fetchCount = 0;
+      server.use(
+        http.get(/https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/, () => {
+          fetchCount++;
+          return HttpResponse.json(mockDetail);
+        })
+      );
+
+      const user = userEvent.setup();
+      renderDetailPanel();
+      await screen.findByText('bulbasaur');
+      expect(fetchCount).toBe(1);
+
+      await user.click(screen.getByRole('button', { name: 'Refresh details' }));
+      await screen.findByText('bulbasaur');
+
+      expect(fetchCount).toBe(2);
     });
   });
 });

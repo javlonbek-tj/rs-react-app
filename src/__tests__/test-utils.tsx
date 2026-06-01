@@ -3,6 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { render, type RenderOptions } from '@testing-library/react';
 import { AppProviders, type AppStore } from './providers/app-providers';
 import selectedPokemonReducer from './../app/selectedPokemonSlice';
+import { pokemonApi } from '../app/pokemonApi';
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   store?: AppStore;
@@ -10,7 +11,12 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
 
 export function makeStore() {
   return configureStore({
-    reducer: { selectedPokemon: selectedPokemonReducer },
+    reducer: {
+      selectedPokemon: selectedPokemonReducer,
+      [pokemonApi.reducerPath]: pokemonApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(pokemonApi.middleware),
   });
 }
 
