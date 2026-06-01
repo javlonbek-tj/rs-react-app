@@ -7,10 +7,18 @@ import App from './App';
 import { server } from './mocks/server';
 import { mockPokemonDetail, mockPokemonList } from './mocks/handlers';
 import selectedPokemonReducer from './app/selectedPokemonSlice';
+import { pokemonApi } from './app/pokemonApi';
 import ThemeProvider from './context/ThemeProvider';
 
 function makeStore() {
-  return configureStore({ reducer: { selectedPokemon: selectedPokemonReducer } });
+  return configureStore({
+    reducer: {
+      selectedPokemon: selectedPokemonReducer,
+      [pokemonApi.reducerPath]: pokemonApi.reducer,
+    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(pokemonApi.middleware),
+  });
 }
 
 function renderApp() {
@@ -198,6 +206,42 @@ describe('App Component', () => {
       await user.click(screen.getByRole('button', { name: 'Search' }));
 
       expect(localStorage.getItem('searchTerm')).toBe('eevee');
+    });
+  });
+
+  describe('Cache Invalidation', () => {
+    it('renders refresh button after results load', async () => {
+      renderApp();
+
+      await screen.findAllByText('bulbasaur');
+
+      expect(
+        screen.getByRole('button', { name: 'Refresh results' })
+      ).toBeInTheDocument();
+    });
+
+    it('refetches data when refresh button is clicked', async () => {
+      let fetchCount = 0;
+      server.use(
+        http.get('https://pokeapi.co/api/v2/pokemon', () => {
+          fetchCount++;
+          return HttpResponse.json(mockPokemonList);
+        }),
+        http.get(/https:\/\/pokeapi\.co\/api\/v2\/pokemon\/.+/, () => {
+          return HttpResponse.json(mockPokemonDetail);
+        })
+      );
+
+      const user = userEvent.setup();
+      renderApp();
+
+      await screen.findAllByText('bulbasaur');
+      expect(fetchCount).toBe(1);
+
+      await user.click(screen.getByRole('button', { name: 'Refresh results' }));
+      await screen.findAllByText('bulbasaur');
+
+      expect(fetchCount).toBe(2);
     });
   });
 });

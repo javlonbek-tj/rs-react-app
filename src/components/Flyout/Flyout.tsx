@@ -17,9 +17,10 @@ function Flyout({ pokemon }: FlyoutProps) {
   const selectedPokemon = pokemon.filter((p) => selectedIds.includes(p.id));
 
   function handleDownload() {
-    const header = 'id,name,type,url';
+    const header = 'id,name,type,description,url';
     const rows = selectedPokemon.map((p: Pokemon) => {
-      return `${p.id},${p.name},"${p.types.join('|')}",https://pokeapi.co/api/v2/pokemon/${p.id}`;
+      const description = `A ${p.types.join('/')} type Pokémon`;
+      return `${p.id},${p.name},"${p.types.join('|')}","${description}",https://pokeapi.co/api/v2/pokemon/${p.id}`;
     });
 
     const csv = [header, ...rows].join('\n');

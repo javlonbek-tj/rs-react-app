@@ -1,15 +1,12 @@
 import { useState, type ChangeEvent, type KeyboardEvent } from 'react';
 
-const STORAGE_KEY = 'searchTerm';
-
 interface SearchProps {
+  initialValue: string;
   onSearch: (term: string) => void;
 }
 
-function Search({ onSearch }: SearchProps) {
-  const [inputValue, setInputValue] = useState(
-    () => localStorage.getItem(STORAGE_KEY) ?? ''
-  );
+function Search({ initialValue, onSearch }: SearchProps) {
+  const [inputValue, setInputValue] = useState(initialValue);
 
   function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
     setInputValue(e.target.value);

@@ -1,47 +1,20 @@
-import { useEffect, useReducer } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
-import { fetchPokemonById } from '../../api/pokeapi';
+import { useAppDispatch } from '../../app/hooks';
+import { pokemonApi, useGetPokemonDetailQuery, extractErrorMessage } from '../../app/pokemonApi';
 import Spinner from '../Spinner/Spinner';
-import type { PokemonDetail } from '../../types/api';
 import { typeColors } from '../../utils/typeColors';
 
-type State =
-  | { status: 'loading' }
-  | { status: 'success'; pokemon: PokemonDetail }
-  | { status: 'error'; message: string };
-
-type Action =
-  | { type: 'FETCH_START' }
-  | { type: 'FETCH_SUCCESS'; pokemon: PokemonDetail }
-  | { type: 'FETCH_ERROR'; message: string };
-
-function reducer(_state: State, action: Action): State {
-  switch (action.type) {
-    case 'FETCH_START':
-      return { status: 'loading' };
-    case 'FETCH_SUCCESS':
-      return { status: 'success', pokemon: action.pokemon };
-    case 'FETCH_ERROR':
-      return { status: 'error', message: action.message };
-  }
-}
-
 function DetailPanel() {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const id = searchParams.get('details') ?? '';
-  const [state, dispatch] = useReducer(reducer, { status: 'loading' });
 
-  useEffect(() => {
-    dispatch({ type: 'FETCH_START' });
-    fetchPokemonById(id)
-      .then((pokemon) => dispatch({ type: 'FETCH_SUCCESS', pokemon }))
-      .catch((err: unknown) => {
-        const message =
-          err instanceof Error ? err.message : 'Something went wrong.';
-        dispatch({ type: 'FETCH_ERROR', message });
-      });
-  }, [id]);
+  const { data: pokemon, isLoading, isError, error } = useGetPokemonDetailQuery(id);
+
+  function handleRefresh() {
+    dispatch(pokemonApi.util.invalidateTags([{ type: 'PokemonDetail', id }]));
+  }
 
   function close(e: React.MouseEvent) {
     e.stopPropagation();
@@ -56,44 +29,53 @@ function DetailPanel() {
         <h2 className="text-lg font-bold text-slate-700 dark:text-slate-200">
           Details
         </h2>
-        <button
-          onClick={close}
-          className="text-slate-400 dark:text-slate-500 hover:text-slate-700  dark:hover:text-slate-200 text-2xl leading-none cursor-pointer transition-colors"
-          aria-label="Close details"
-        >
-          ✕
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRefresh}
+            aria-label="Refresh details"
+            className="text-sm px-3 py-1 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors cursor-pointer"
+          >
+            Refresh
+          </button>
+          <button
+            onClick={close}
+            className="text-slate-400 dark:text-slate-500 hover:text-slate-700 dark:hover:text-slate-200 text-2xl leading-none cursor-pointer transition-colors"
+            aria-label="Close details"
+          >
+            ✕
+          </button>
+        </div>
       </div>
 
       <div className="flex-1 px-6 py-8">
-        {state.status === 'loading' && <Spinner />}
+        {isLoading && <Spinner />}
 
-        {state.status === 'error' && (
+        {isError && (
           <div className="text-center py-16">
             <p className="text-5xl mb-4">😔</p>
-            <p className="text-red-500 font-semibold">{state.message}</p>
+            <p className="text-red-500 font-semibold">{extractErrorMessage(error)}</p>
           </div>
         )}
 
-        {state.status === 'success' && (
+        {pokemon && (
           <div className="flex flex-col items-center gap-6">
             <div className="bg-slate-50 dark:bg-slate-600 rounded-2xl w-full flex items-center justify-center py-10 relative">
               <span className="absolute top-4 right-4 text-sm text-slate-300 font-mono font-semibold">
-                #{String(state.pokemon.id).padStart(3, '0')}
+                #{String(pokemon.id).padStart(3, '0')}
               </span>
               <img
-                src={state.pokemon.image}
-                alt={state.pokemon.name}
+                src={pokemon.image}
+                alt={pokemon.name}
                 className="w-48 h-48 object-contain drop-shadow-xl"
               />
             </div>
 
             <h3 className="text-3xl font-black text-slate-800 capitalize">
-              {state.pokemon.name}
+              {pokemon.name}
             </h3>
 
             <div className="flex gap-2 flex-wrap justify-center">
-              {state.pokemon.types.map((type) => (
+              {pokemon.types.map((type) => (
                 <span
                   key={type}
                   className={`px-4 py-1 rounded-full text-sm font-semibold capitalize ${typeColors[type] ?? 'bg-slate-100 text-slate-600'}`}
@@ -109,7 +91,7 @@ function DetailPanel() {
                   Height
                 </p>
                 <p className="text-slate-800 text-xl font-bold">
-                  {(state.pokemon.height / 10).toFixed(1)} m
+                  {(pokemon.height / 10).toFixed(1)} m
                 </p>
               </div>
               <div className="bg-slate-50 rounded-xl p-4 text-center">
@@ -117,7 +99,7 @@ function DetailPanel() {
                   Weight
                 </p>
                 <p className="text-slate-800 text-xl font-bold">
-                  {(state.pokemon.weight / 10).toFixed(1)} kg
+                  {(pokemon.weight / 10).toFixed(1)} kg
                 </p>
               </div>
             </div>
