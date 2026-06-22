@@ -1,38 +1,33 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { NextIntlClientProvider } from 'next-intl';
+import messages from '../../messages/en.json';
 import SearchBar from './SearchBar';
+
+function renderSearchBar(initialValue = '') {
+  render(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      <SearchBar initialValue={initialValue} />
+    </NextIntlClientProvider>
+  );
+}
 
 describe('SearchBar Component', () => {
   it('renders the search input', () => {
-    render(<SearchBar initialValue="" onSearch={vi.fn()} />);
+    renderSearchBar();
     expect(
-      screen.getByPlaceholderText('Search Pokemon by name…')
+      screen.getByPlaceholderText('Search Pokemon by name...')
     ).toBeInTheDocument();
   });
 
   it('renders the search button', () => {
-    render(<SearchBar initialValue="" onSearch={vi.fn()} />);
+    renderSearchBar();
     expect(screen.getByRole('button', { name: 'Search' })).toBeInTheDocument();
   });
 
   it('displays the initialValue prop on mount', () => {
-    render(<SearchBar initialValue="pikachu" onSearch={vi.fn()} />);
-    expect(
-      screen.getByPlaceholderText('Search Pokemon by name…')
-    ).toHaveValue('pikachu');
-  });
-
-  it('calls onSearch with the typed value when the button is clicked', async () => {
-    const onSearch = vi.fn();
-    const user = userEvent.setup();
-    render(<SearchBar initialValue="" onSearch={onSearch} />);
-
-    await user.type(
-      screen.getByPlaceholderText('Search Pokemon by name…'),
+    renderSearchBar('pikachu');
+    expect(screen.getByPlaceholderText('Search Pokemon by name...')).toHaveValue(
       'pikachu'
     );
-    await user.click(screen.getByRole('button', { name: 'Search' }));
-
-    expect(onSearch).toHaveBeenCalledWith('pikachu');
   });
 });

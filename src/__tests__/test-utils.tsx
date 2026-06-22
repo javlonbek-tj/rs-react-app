@@ -2,8 +2,8 @@ import { type ReactElement } from 'react';
 import { configureStore } from '@reduxjs/toolkit';
 import { render, type RenderOptions } from '@testing-library/react';
 import { AppProviders, type AppStore } from './providers/app-providers';
-import selectedPokemonReducer from './../app/selectedPokemonSlice';
-import { pokemonApi } from '../app/pokemonApi';
+import selectedPokemonReducer from '../app-apis/selectedPokemonSlice';
+import { pokemonApi } from '../app-apis/pokemonApi';
 
 interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   store?: AppStore;

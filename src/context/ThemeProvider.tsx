@@ -1,28 +1,29 @@
-import { useEffect, useState } from 'react';
+'use client';
+
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 import type { Theme } from './ThemeCtx';
 import { ThemeCtx } from './ThemeCtx';
 
-export default function ThemeProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const [theme, setThemeState] = useState<Theme>(
-    () => (localStorage.getItem('theme') as Theme) || 'light'
-  );
+export default function ThemeProvider({ children }: { children: ReactNode }) {
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window === 'undefined') {
+      return 'light';
+    }
 
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-  }, [theme]);
+    return localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+  });
 
-  const setTheme = (t: Theme) => {
-    setThemeState(t);
-    localStorage.setItem('theme', t);
+  const setTheme = (nextTheme: Theme) => {
+    setThemeState(nextTheme);
+    localStorage.setItem('theme', nextTheme);
   };
 
   return (
     <ThemeCtx.Provider value={{ theme, setTheme }}>
-      {children}
+      <div className={theme === 'dark' ? 'dark min-h-screen' : 'min-h-screen'}>
+        {children}
+      </div>
     </ThemeCtx.Provider>
   );
 }

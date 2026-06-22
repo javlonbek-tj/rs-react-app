@@ -1,81 +1,64 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { NextIntlClientProvider } from 'next-intl';
+import messages from '../../messages/en.json';
 import Search from './Search';
 
+function renderSearch(initialValue = '') {
+  return render(
+    <NextIntlClientProvider locale="en" messages={messages}>
+      <Search initialValue={initialValue} />
+    </NextIntlClientProvider>
+  );
+}
+
 describe('Search Component', () => {
-  const mockOnSearch = vi.fn();
-
   beforeEach(() => {
-    mockOnSearch.mockClear();
+    localStorage.clear();
   });
 
-  describe('Rendering', () => {
-    it('renders search input and search button', () => {
-      render(<Search initialValue="" onSearch={mockOnSearch} />);
+  it('renders search input and search button', () => {
+    renderSearch();
 
-      expect(
-        screen.getByPlaceholderText('Search Pokemon by name…')
-      ).toBeInTheDocument();
-      expect(
-        screen.getByRole('button', { name: 'Search' })
-      ).toBeInTheDocument();
-    });
-
-    it('displays the initialValue prop on mount', () => {
-      render(<Search initialValue="pikachu" onSearch={mockOnSearch} />);
-
-      expect(
-        screen.getByPlaceholderText('Search Pokemon by name…')
-      ).toHaveValue('pikachu');
-    });
-
-    it('shows empty input when initialValue is empty', () => {
-      render(<Search initialValue="" onSearch={mockOnSearch} />);
-
-      expect(
-        screen.getByPlaceholderText('Search Pokemon by name…')
-      ).toHaveValue('');
-    });
+    expect(
+      screen.getByPlaceholderText('Search Pokemon by name...')
+    ).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Search' })).toBeInTheDocument();
   });
 
-  describe('User Interaction', () => {
-    it('updates input value when user types', async () => {
-      const user = userEvent.setup();
-      render(<Search initialValue="" onSearch={mockOnSearch} />);
+  it('displays the initialValue prop on mount', () => {
+    renderSearch('pikachu');
 
-      await user.type(
-        screen.getByPlaceholderText('Search Pokemon by name…'),
-        'bulbasaur'
-      );
+    expect(screen.getByPlaceholderText('Search Pokemon by name...')).toHaveValue(
+      'pikachu'
+    );
+  });
 
-      expect(
-        screen.getByPlaceholderText('Search Pokemon by name…')
-      ).toHaveValue('bulbasaur');
-    });
+  it('shows empty input when initialValue is empty', () => {
+    renderSearch();
 
-    it('triggers search callback with correct term when button is clicked', async () => {
-      const user = userEvent.setup();
-      render(<Search initialValue="" onSearch={mockOnSearch} />);
+    expect(screen.getByPlaceholderText('Search Pokemon by name...')).toHaveValue(
+      ''
+    );
+  });
 
-      await user.type(
-        screen.getByPlaceholderText('Search Pokemon by name…'),
-        'eevee'
-      );
-      await user.click(screen.getByRole('button', { name: 'Search' }));
+  it('updates input value when user types', async () => {
+    const user = userEvent.setup();
+    renderSearch();
 
-      expect(mockOnSearch).toHaveBeenCalledWith('eevee');
-    });
+    await user.type(
+      screen.getByPlaceholderText('Search Pokemon by name...'),
+      'bulbasaur'
+    );
 
-    it('triggers search callback when Enter key is pressed', async () => {
-      const user = userEvent.setup();
-      render(<Search initialValue="" onSearch={mockOnSearch} />);
+    expect(screen.getByPlaceholderText('Search Pokemon by name...')).toHaveValue(
+      'bulbasaur'
+    );
+  });
 
-      await user.type(
-        screen.getByPlaceholderText('Search Pokemon by name…'),
-        'mewtwo{Enter}'
-      );
+  it('stores the rendered search value in localStorage', () => {
+    renderSearch('eevee');
 
-      expect(mockOnSearch).toHaveBeenCalledWith('mewtwo');
-    });
+    expect(localStorage.getItem('pokemon-search')).toBe('eevee');
   });
 });

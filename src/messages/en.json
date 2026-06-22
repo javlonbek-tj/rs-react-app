@@ -1,0 +1,44 @@
+{
+  "search": {
+    "placeholder": "Search Pokemon by name...",
+    "button": "Search",
+    "searching": "Searching..."
+  },
+  "pagination": {
+    "previous": "< Previous",
+    "next": "Next >",
+    "page": "Page {page} of {total}"
+  },
+  "flyout": {
+    "selected": "Selected {count} Pokemon",
+    "unselectAll": "Unselect all",
+    "download": "Download CSV"
+  },
+  "detail": {
+    "title": "Details",
+    "refresh": "Refresh",
+    "close": "Close details",
+    "height": "Height",
+    "weight": "Weight"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About"
+  },
+  "about": {
+    "title": "About the author",
+    "role": "Software Developer",
+    "bio": "I am currently working in a non-IT field, but in my free time I actively dedicate myself to programming and software development. I have experience working with modern technologies such as React, TypeScript, Next.js, Node.js, Express.js, PostgreSQL, and MongoDB. Additionally, I have successfully developed and delivered several production-ready projects for my current workplace. My long-term goal is to transition into the IT industry and continue growing as a professional software developer.",
+    "stack": "Tech stack",
+    "projectTitle": "About this project",
+    "projectDesc": "A Pokemon application built as part of the RS School React course. Data is sourced from the open PokeAPI."
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "desc": "Looks like this Pokemon escaped. The page you're looking for doesn't exist.",
+    "back": "Back to Pokedex"
+  },
+  "errors": {
+    "refresh": "Refresh"
+  }
+}
