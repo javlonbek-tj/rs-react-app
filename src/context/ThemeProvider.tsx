@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { ThemeCtx, type Theme } from './ThemeCtx';
 
 export default function ThemeProvider({
@@ -8,19 +9,21 @@ export default function ThemeProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window === 'undefined') return 'dark';
 
     const stored = localStorage.getItem('theme') as Theme;
-    const initial: Theme = stored === 'light' ? 'light' : 'dark';
-    document.documentElement.classList.toggle('dark', initial === 'dark');
-    return initial;
+    return stored === 'light' ? 'light' : 'dark';
   });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme, pathname]);
 
   const setTheme = (t: Theme) => {
     setThemeState(t);
     localStorage.setItem('theme', t);
-    document.documentElement.classList.toggle('dark', t === 'dark');
   };
 
   return (
