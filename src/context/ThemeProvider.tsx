@@ -3,21 +3,17 @@
 import { useState } from 'react';
 import { ThemeCtx, type Theme } from './ThemeCtx';
 
-function getInitialTheme(): Theme {
-  if (typeof window === 'undefined') return 'dark';
-  return (localStorage.getItem('theme') as Theme) || 'dark';
-}
-
 export default function ThemeProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [theme, setThemeState] = useState<Theme>(() => {
-    const initial = getInitialTheme();
-    if (typeof document !== 'undefined') {
-      document.documentElement.classList.toggle('dark', initial === 'dark');
-    }
+    if (typeof window === 'undefined') return 'dark';
+
+    const stored = localStorage.getItem('theme') as Theme;
+    const initial: Theme = stored === 'light' ? 'light' : 'dark';
+    document.documentElement.classList.toggle('dark', initial === 'dark');
     return initial;
   });
 
