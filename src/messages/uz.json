@@ -39,6 +39,7 @@
     "back": "Pokedex ga qaytish"
   },
   "errors": {
-    "refresh": "Yangilash"
+    "refresh": "Yangilash",
+    "triggerError": "Xatolik chiqarish"
   }
 }

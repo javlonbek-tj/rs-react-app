@@ -7,6 +7,7 @@ import DetailPanelSkeleton from '@/components/DetailPanel/DetailPanelSkeleton';
 import PaginationServer from '@/components/Pagination/PaginationServer';
 import SearchBar from '@/components/SearchBar/SearchBar';
 import Flyout from '@/components/Flyout/Flyout';
+import RefreshButton from '@/components/RefreshButton/RefreshButton';
 
 type SearchParams = {
   name?: string;
@@ -26,7 +27,7 @@ export default async function Home({ searchParams }: Props) {
   const currentParams = new URLSearchParams(params).toString();
 
   return (
-    <div className="flex flex-col flex-1 bg-slate-50 dark:bg-slate-800">
+    <div className="flex flex-col flex-1 bg-slate-50 dark:bg-slate-800 min-h-screen">
       <SearchBar initialValue={name} />
       <div className="relative flex flex-1 overflow-hidden">
         <main className="flex-1 overflow-y-auto py-4">
@@ -54,12 +55,7 @@ export default async function Home({ searchParams }: Props) {
               </Suspense>
 
               <div className="flex gap-2">
-                <button
-                  aria-label="Refresh results"
-                  className="px-4 py-2 text-sm bg-slate-600 text-white rounded-lg cursor-pointer hover:bg-slate-700 transition-colors"
-                >
-                  Refresh
-                </button>
+                <RefreshButton />
                 <ErrorTrigger />
               </div>
             </div>

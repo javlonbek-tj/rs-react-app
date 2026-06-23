@@ -6,8 +6,6 @@ export const metadata: Metadata = {
   description: 'About the author and this project',
 };
 
-export const dynamic = 'force-static';
-
 const stack = [
   'React',
   'TypeScript',
@@ -22,7 +20,7 @@ export default async function AboutPage() {
   const t = await getTranslations('about');
 
   return (
-    <main className="max-w-3xl mx-auto px-6 py-12">
+    <main className="max-w-3xl mx-auto px-6 py-12 flex-1">
       <h1 className="text-3xl font-black text-slate-800 dark:text-slate-100 mb-8">
         {t('title')}
       </h1>
@@ -39,7 +37,7 @@ export default async function AboutPage() {
           {t('bio')}
         </p>
 
-        <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wide mb-3">
+        <h3 className="text-sm font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wide mb-3">
           {t('stack')}
         </h3>
         <div className="flex flex-wrap gap-2">

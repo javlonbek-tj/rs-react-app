@@ -20,10 +20,12 @@ export default function Providers({
   messages,
 }: ProvidersProps) {
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <ReduxProvider store={store}>
-        <ThemeProvider>{children}</ThemeProvider>
-      </ReduxProvider>
-    </NextIntlClientProvider>
+    <div className="flex flex-col flex-1">
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        <ReduxProvider store={store}>
+          <ThemeProvider>{children}</ThemeProvider>
+        </ReduxProvider>
+      </NextIntlClientProvider>
+    </div>
   );
 }

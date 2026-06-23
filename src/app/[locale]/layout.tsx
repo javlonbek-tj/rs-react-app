@@ -32,8 +32,15 @@ export default async function LocaleLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
-      <body className="bg-slate-50 dark:bg-slate-800 min-h-screen">
+    <html lang={locale} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{const theme =localStorage.getItem('theme')||'dark';document.documentElement.classList.toggle('dark',theme==='dark');}catch(e){}`,
+          }}
+        />
+      </head>
+      <body className="bg-slate-50 dark:bg-slate-900 min-h-screen flex flex-col">
         <Providers locale={locale} messages={messages}>
           <Header />
           {children}

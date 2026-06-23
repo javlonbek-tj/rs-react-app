@@ -39,6 +39,7 @@
     "back": "Back to Pokedex"
   },
   "errors": {
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "triggerError": "Trigger Error"
   }
 }
