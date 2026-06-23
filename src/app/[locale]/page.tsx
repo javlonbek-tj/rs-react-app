@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { setRequestLocale } from 'next-intl/server';
 import CardList from '@/components/CardList/CardList';
 import ErrorTrigger from '@/components/ErrorTrigger/ErrorTrigger';
 import CardListSkeleton from '@/components/Card/CardListSkeleton';
@@ -15,20 +16,28 @@ type SearchParams = {
   page?: string;
   details?: string;
 };
-type Props = { searchParams: Promise<SearchParams> };
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<SearchParams>;
+};
 
-export default async function Home({ searchParams }: Props) {
-  const params = await searchParams;
-  const name = params.name?.trim().toLowerCase();
-  const limit = Number(params.limit) || 9;
-  const page = Number(params.page) || 1;
-  const detailId = params.details;
+export default async function Home({ params, searchParams }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
 
-  const currentParams = new URLSearchParams(params).toString();
+  const searchParamsResolved = await searchParams;
+  const name = searchParamsResolved.name?.trim().toLowerCase();
+  const limit = Number(searchParamsResolved.limit) || 9;
+  const page = Number(searchParamsResolved.page) || 1;
+  const detailId = searchParamsResolved.details;
+
+  const currentParams = new URLSearchParams(searchParamsResolved).toString();
 
   return (
     <div className="flex flex-col flex-1 bg-slate-50 dark:bg-slate-800 min-h-screen">
-      <SearchBar initialValue={name} />
+      <Suspense fallback={<div className="h-20 bg-slate-100 dark:bg-slate-700 border-b border-slate-200 dark:border-slate-600 animate-pulse" />}>
+        <SearchBar initialValue={name} />
+      </Suspense>
       <div className="relative flex flex-1 overflow-hidden">
         <main className="flex-1 overflow-y-auto py-4">
           <div className="max-w-5xl mx-auto px-6 lg:px-4">

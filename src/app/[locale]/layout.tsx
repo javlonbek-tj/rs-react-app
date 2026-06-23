@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import '../../globals.css';
-import { getMessages } from 'next-intl/server';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { routing } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 import Header from '@/components/Header/Header';
@@ -24,6 +24,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+  setRequestLocale(locale);
 
   if (!routing.locales.includes(locale as 'en' | 'uz')) {
     notFound();

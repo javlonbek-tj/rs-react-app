@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { Link } from '@/i18n/navigation';
 import ToggleTheme from './ToggleTheme';
 import Navigation from './Navigation';
@@ -16,7 +17,9 @@ export default function Header() {
 
         <div className="flex items-center gap-4">
           <Navigation />
-          <LocaleSwitcher />
+          <Suspense fallback={<div className="w-12 h-8 bg-slate-200 dark:bg-slate-700 animate-pulse rounded-lg" />}>
+            <LocaleSwitcher />
+          </Suspense>
           <ToggleTheme />
         </div>
       </div>
