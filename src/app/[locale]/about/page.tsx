@@ -1,10 +1,24 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
+import { routing } from '@/i18n/routing';
 
-export const metadata: Metadata = {
-  title: 'About | Pokemon',
-  description: 'About the author and this project',
-};
+export const dynamic = 'force-static';
+export const revalidate = false;
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    title: locale === 'uz' ? 'Haqida | Pokemon' : 'About | Pokemon',
+  };
+}
 
 const stack = [
   'React',
@@ -16,8 +30,13 @@ const stack = [
   'MongoDB',
 ];
 
-export default async function AboutPage() {
-  const t = await getTranslations('about');
+export default async function AboutPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'about' });
 
   return (
     <main className="max-w-3xl mx-auto px-6 py-12 flex-1">
