@@ -1,0 +1,45 @@
+{
+  "search": {
+    "placeholder": "Pokemon nomini kiriting...",
+    "button": "Qidirish",
+    "searching": "Qidirilmoqda..."
+  },
+  "pagination": {
+    "previous": "< Oldingi",
+    "next": "Keyingi >",
+    "page": "{page}-sahifa / {total}"
+  },
+  "flyout": {
+    "selected": "{count} Pokemon tanlandi",
+    "unselectAll": "Hammasini bekor qilish",
+    "download": "CSV yuklab olish"
+  },
+  "detail": {
+    "title": "Tafsilotlar",
+    "refresh": "Yangilash",
+    "close": "Yopish",
+    "height": "Balandlik",
+    "weight": "Og'irlik"
+  },
+  "nav": {
+    "home": "Bosh sahifa",
+    "about": "Haqida"
+  },
+  "about": {
+    "title": "Muallif haqida",
+    "role": "Dasturchi",
+    "bio": "Hozirda IT bo'lmagan sohada ishlayman, lekin bo'sh vaqtimda dasturlash bilan shug'ullanaman. React, TypeScript, Next.js, Node.js, Express.js, PostgreSQL va MongoDB kabi zamonaviy texnologiyalar bilan ishlash tajribam bor. Hozirgi ish joyim uchun bir nechta tayyor loyihalarni ishlab chiqqanman. Uzoq muddatli maqsadim IT sohasiga o'tib, professional dasturchi sifatida rivojlanishda davom etish.",
+    "stack": "Texnologiyalar",
+    "projectTitle": "Loyiha haqida",
+    "projectDesc": "Bu ilova RS School React kursi doirasida yaratilgan. Ma'lumotlar ochiq PokeAPI dan olingan."
+  },
+  "notFound": {
+    "title": "Sahifa topilmadi",
+    "desc": "Bu Pokemon qochib ketdi. Siz izlayotgan sahifa mavjud emas.",
+    "back": "Pokedex ga qaytish"
+  },
+  "errors": {
+    "refresh": "Yangilash",
+    "triggerError": "Xatolik chiqarish"
+  }
+}

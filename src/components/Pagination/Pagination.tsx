@@ -1,23 +1,28 @@
-import { useSearchParams } from 'react-router';
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface PaginationProps {
   total: number;
   limit: number;
 }
 
-function Pagination({ total, limit }: PaginationProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
+export default function Pagination({ total, limit }: PaginationProps) {
+  const searchParams = useSearchParams() ?? new URLSearchParams();
+  const router = useRouter();
+  const t = useTranslations('pagination');
+
   const page = Number(searchParams.get('page') ?? '1');
   const totalPages = Math.ceil(total / limit);
 
   if (totalPages <= 1) return null;
 
   function goTo(nextPage: number) {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.set('page', String(nextPage));
-      return next;
-    });
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', String(nextPage));
+
+    router.push(`?${params.toString()}`);
   }
 
   const className =
@@ -30,11 +35,11 @@ function Pagination({ total, limit }: PaginationProps) {
         disabled={page <= 1}
         className={className}
       >
-        ← Previous
+        {t('previous')}
       </button>
 
       <span className="text-slate-500 dark:text-slate-200 text-sm font-medium">
-        Page {page} of {totalPages}
+        {t('page', { page, total: totalPages })}
       </span>
 
       <button
@@ -42,10 +47,8 @@ function Pagination({ total, limit }: PaginationProps) {
         disabled={page >= totalPages}
         className={className}
       >
-        Next →
+        {t('next')}
       </button>
     </div>
   );
 }
-
-export default Pagination;

@@ -1,9 +1,10 @@
 import { type ReactNode } from 'react';
 import { Provider } from 'react-redux';
-import { MemoryRouter } from 'react-router';
+import { NextIntlClientProvider } from 'next-intl';
 
 import ThemeProvider from '../../context/ThemeProvider';
 import type { makeStore } from '../test-utils';
+import messages from '../../messages/en.json';
 
 export type AppStore = ReturnType<typeof makeStore>;
 
@@ -15,10 +16,10 @@ export function AppProviders({
   store: AppStore;
 }) {
   return (
-    <Provider store={store}>
-      <ThemeProvider>
-        <MemoryRouter>{children}</MemoryRouter>
-      </ThemeProvider>
-    </Provider>
+    <NextIntlClientProvider locale="en" messages={messages}>
+      <Provider store={store}>
+        <ThemeProvider>{children}</ThemeProvider>
+      </Provider>
+    </NextIntlClientProvider>
   );
 }

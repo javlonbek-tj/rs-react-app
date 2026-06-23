@@ -52,12 +52,16 @@ async function fetchDetail(url: string): Promise<Pokemon> {
 }
 
 export async function fetchPokemon(
-  name: string,
-  page: number = 1,
-  limit: number = 20
+  pageOrName: number | string = 1,
+  limit = 20,
+  maybeName?: string
 ): Promise<FetchPokemonResult> {
-  if (name.trim()) {
-    const res = await fetch(`${BASE_URL}/pokemon/${name.trim().toLowerCase()}`);
+  const legacyName = typeof pageOrName === 'string' ? pageOrName : undefined;
+  const page = typeof pageOrName === 'number' ? pageOrName : 1;
+  const name = (maybeName ?? legacyName)?.trim().toLowerCase();
+
+  if (name) {
+    const res = await fetch(`${BASE_URL}/pokemon/${name}`);
     if (res.status === 404) throw new Error('No Pokemon found with that name.');
     if (!res.ok) {
       throw new Error(
@@ -88,4 +92,13 @@ export async function fetchPokemonById(id: string): Promise<PokemonDetail> {
     throw new Error(`Something went wrong (${res.status}). Please try again.`);
   }
   return parseDetailFull((await res.json()) as PokeDetailResponse);
+}
+
+export async function fetchTotal(name?: string): Promise<number> {
+  if (name) return 1;
+
+  const res = await fetch(`${BASE_URL}/pokemon?limit=1`);
+  if (!res.ok) throw new Error('Failed to fetch total');
+  const data = await res.json();
+  return data.count;
 }
